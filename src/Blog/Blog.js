@@ -31,12 +31,12 @@ const Blog = ({ searchPost }) => {
       let filters = '';
 
       if (debouncedSearchPost) {
-        filters += `/Search?term=${debouncedSearchPost}`;
+        filters = `/Search?term=${debouncedSearchPost}`;
       }
 
       // If activeCategory is set to default(null) all Posts will be displayed
-      if (activeCategory) {
-        filters += `/GetPostByCategory?categoryId=${activeCategory.id}`;
+      if (!debouncedSearchPost && activeCategory) {
+        filters = `/GetPostByCategory?categoryId=${activeCategory.id}`;
       }
 
       PostApi.getPosts(filters).then(res => {
@@ -112,6 +112,7 @@ const Blog = ({ searchPost }) => {
       const index = list.indexOf(selected);
       list.splice(index, 1);
       setCategories(list);
+      setActiveCategory(null);
     } else {
       PostApi.deletePost(selected.id);
 
